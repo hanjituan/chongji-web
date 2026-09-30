@@ -4,7 +4,7 @@
       <template #header>
         <div class="card-header">
           <span>日记管理</span>
-          <el-button type="primary" @click="exportTable">
+          <el-button type="primary" @click="handleExport">
             导出表格数据
           </el-button>
         </div>
@@ -224,10 +224,6 @@ const pagination = reactive({
 onMounted(async () => {
   await loadLogs();
 });
-
-const exportTable = async () => {
-  ElMessage.info("导出功能正在开发中，敬请期待！");
-};
 
 const loadLogs = async () => {
   try {

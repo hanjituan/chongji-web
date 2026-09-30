@@ -53,7 +53,7 @@
           <template #default="{ row }">
             <div v-if="row.owners && row.owners.length > 0">
               <el-tag
-                v-for="(user, index) in row.owners"
+                v-for="user in row.owners"
                 :key="user.userId"
                 type="primary"
                 style="margin-right: 4px; cursor: pointer"

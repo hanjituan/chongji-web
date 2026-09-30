@@ -2,7 +2,7 @@
  * 用户管理相关 API
  */
 
-import { request, APIError } from "./base";
+import { request } from "./base";
 import type { AdminUser, PaginationParams, PaginationResponse } from "./types";
 
 /**
@@ -28,7 +28,7 @@ export const adminUserAPI = {
         ? `/api/admin/users?${queryString}`
         : "/api/admin/users";
 
-      const response = await request<PaginationResponse<any>>(endpoint, {
+      const response = await request<PaginationResponse<AdminUser>>(endpoint, {
         method: "GET",
       });
 
@@ -40,12 +40,9 @@ export const adminUserAPI = {
         }));
       }
 
-      return response as PaginationResponse<AdminUser>;
+      return response;
     } catch (error) {
-      // 如果是业务错误（APIError），直接抛出
-      if (error instanceof APIError) {
-        throw error;
-      }
+      throw error;
     }
   },
 

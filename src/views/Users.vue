@@ -60,7 +60,7 @@
           <template #default="{ row }">
             <div v-if="row.pets && row.pets.length > 0">
               <el-tag
-                v-for="(pet, index) in row.pets"
+                v-for="pet in row.pets"
                 :key="pet.id"
                 type="primary"
                 style="margin-right: 4px; cursor: pointer"

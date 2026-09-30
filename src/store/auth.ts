@@ -9,10 +9,11 @@ export const useAuthStore = defineStore("auth", () => {
   const nickname = ref<string>(localStorage.getItem("nickname") || "");
   const userId = ref<string>(localStorage.getItem("userId") || "");
   const email = ref<string>(localStorage.getItem("email") || "");
-  const isLoggedIn = ref<boolean>(!!token.value);
+  const role = ref<string>(localStorage.getItem("role") || "");
+  const isLoggedIn = ref<boolean>(!!token.value && role.value === "ADMIN");
 
   /**
-   * 登录方法：调用后端 API
+   * 登录方法：调用后端 API，并只接受管理员角色会话。
    */
   const login = async (user: string, pass: string) => {
     try {
@@ -22,22 +23,23 @@ export const useAuthStore = defineStore("auth", () => {
       };
 
       const response = await authAPI.login(params);
+      if (response.success && response.token && response.data.role === "ADMIN") {
+        const displayName = response.data.nickname || response.data.username;
 
-      if (response.success && response.token) {
-        // 保存 token 和用户信息
         token.value = response.token;
         username.value = response.data.username;
-        nickname.value = response.data.nickname;
+        nickname.value = displayName;
         userId.value = response.data.id;
         email.value = response.data.email;
+        role.value = response.data.role;
         isLoggedIn.value = true;
 
-        // 持久化到 localStorage
         localStorage.setItem("token", response.token);
         localStorage.setItem("username", response.data.username);
-        localStorage.setItem("nickname", response.data.nickname);
+        localStorage.setItem("nickname", displayName);
         localStorage.setItem("userId", response.data.id);
         localStorage.setItem("email", response.data.email);
+        localStorage.setItem("role", response.data.role);
 
         return { success: true, message: response.message };
       }
@@ -51,15 +53,13 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
-  /**
-   * 退出登录
-   */
   const logout = () => {
     token.value = "";
     username.value = "";
     nickname.value = "";
     userId.value = "";
     email.value = "";
+    role.value = "";
     isLoggedIn.value = false;
 
     localStorage.removeItem("token");
@@ -67,6 +67,7 @@ export const useAuthStore = defineStore("auth", () => {
     localStorage.removeItem("nickname");
     localStorage.removeItem("userId");
     localStorage.removeItem("email");
+    localStorage.removeItem("role");
   };
 
   return {
@@ -75,6 +76,7 @@ export const useAuthStore = defineStore("auth", () => {
     nickname,
     userId,
     email,
+    role,
     isLoggedIn,
     login,
     logout,

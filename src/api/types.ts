@@ -21,8 +21,9 @@ export interface AdminLoginResponse {
   data: {
     id: string;
     username: string;
-    nickname: string;
+    nickname?: string;
     email: string;
+    role: "ADMIN";
   };
 }
 

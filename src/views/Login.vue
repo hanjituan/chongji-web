@@ -48,7 +48,7 @@
           </el-button>
         </el-form-item>
       </el-form>
-      <div class="login-tips">
+      <div v-if="isDev" class="login-tips">
         <el-alert
           title="默认账号: admin / admin123"
           type="info"
@@ -72,10 +72,11 @@ const router = useRouter();
 const authStore = useAuthStore();
 const formRef = ref<FormInstance>();
 const loading = ref(false);
+const isDev = import.meta.env.DEV;
 
 const form = reactive<LoginForm>({
-  username: "",
-  password: "",
+  username: isDev ? "admin" : "",
+  password: isDev ? "admin123" : "",
 });
 
 const rules: FormRules<LoginForm> = {
